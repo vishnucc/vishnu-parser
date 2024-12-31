@@ -5,35 +5,44 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <fstream>
 #include <nlohmann/json.hpp>
     
-    class port
+    class ports
     {
         private:
-            std::map<std::string,std::string> ports_info;
+            std::vector<std::string,std::string> ports_list;
+            std::map<std::string,std::string> input_ports;
+            std::map<std::string,std::string> output_ports;
 
         public:
-            void addPortInfo(const std::string& port_name, const std::string& info) {
+            void addport(const std::string& port_name, const std::string& direction) {
                 // std::cout << "port added-------------" << port_name << info << std:: endl;
-                ports_info[port_name] = info;
-            }
-
-            std::string getPortInfo(const std::string& port_name) const {
-                auto it = ports_info.find(port_name);
-                if (it != ports_info.end()) {
-                    return it->second;
-                } else {
-                    return "No information available for this port.";
+                if ((direction == "input") || (direction == "INPUT"))
+                {
+                    input_ports[port_name] = direction;
+                }
+                else {
+                    output_ports[port_name]=direction;
                 }
             }
 
-            // Method to display all port information
-            void displayPortInfo() const {
-                std::cout << "port information-------------";
-                for (const auto& [port_name, info] : ports_info) {
-                    std::cout << "Port: " << port_name << " - Info: " << info << std::endl;
-                }
-            }
+            // std::string getPortInfo(const std::string& port_name) const {
+            //     auto it = ports_list.find(port_name);
+            //     if (it != ports_info.end()) {
+            //         return it->second;
+            //     } else {
+            //         return "No information available for this port.";
+            //     }
+            // }
+
+            // // Method to display all port information
+            // void displayPortInfo() const {
+            //     std::cout << "port information-------------";
+            //     for (const auto& [port_name, info] : ports_list) {
+            //         std::cout << "Port: " << port_name << " - Info: " << info << std::endl;
+            //     }
+            // }
     };
 
     class wires
@@ -43,14 +52,16 @@
             std::vector<std::string >wire_list;
 
         public:
-             void addwire(const std::string& wire_name ){
+            wires();
+            void addwire(const std::string& wire_name ){
                 this->wire_name= wire_name;
 
                 wire_list.push_back(wire_name);
                
             }
+            ~wires();
     };
-    class Modules:public port ,public wires
+    class Modules:public ports ,public wires
     {
         private:
             std::string module_name;
@@ -67,7 +78,7 @@
             }
             void addports(const std::string& port)
             {
-                addPortInfo(port,"input");
+                addport(port,"input");
                 ports_list.push_back(port);
             }
 
@@ -77,7 +88,7 @@
                 wires_list.push_back(wire);
             }
             void displayPorts() const {
-                displayPortInfo();
+                // displayPortInfo();
                 std::cout << "Ports for module " << module_name << ":" << std::endl;
             
                 for (const auto& port : ports_list) {
@@ -95,8 +106,8 @@
         j["ports"] = ports_list;
         j["wires/nets"]= wires_list;
         return j;
-    }
-    };
+        }    
+};
 
 
 #endif

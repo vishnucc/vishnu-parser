@@ -63,7 +63,9 @@ extern int yydebug;
     RPAREN = 264,                  /* RPAREN  */
     COMMA = 265,                   /* COMMA  */
     ENDMODULE = 266,               /* ENDMODULE  */
-    WIRE = 267                     /* WIRE  */
+    WIRE = 267,                    /* WIRE  */
+    COLON = 268,                   /* COLON  */
+    DOT = 269                      /* DOT  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -72,12 +74,12 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 21 "rules.yy"
+#line 13 "rules.yy"
 
   int ival;
   std::string *str;
 
-#line 81 "rules.tab.hh"
+#line 83 "rules.tab.hh"
 
 };
 typedef union YYSTYPE YYSTYPE;

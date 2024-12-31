@@ -71,24 +71,16 @@
 
     #include <iostream>
     #include <string>
-    #include <vector>
     #include <set>
+    #include <vector>
+ 
     extern char* yytext;  // Declare yytext (defined by Flex)
     extern int yylex(); 
     extern void yyerror(const char *s);
     extern int yylineno;
 
-    #include "./objects/util.hh"
 
-    std::vector<Modules*> modules_list;\
-    std::set<std::string> ports_;
-    std::vector<std::string> input_ports_;
-    std::vector<std::string> output_ports_;
-    std::vector<std::string> wires_;
-    Modules* current_module = nullptr; 
-
-
-#line 92 "rules.tab.cc"
+#line 84 "rules.tab.cc"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -129,18 +121,24 @@ enum yysymbol_kind_t
   YYSYMBOL_COMMA = 10,                     /* COMMA  */
   YYSYMBOL_ENDMODULE = 11,                 /* ENDMODULE  */
   YYSYMBOL_WIRE = 12,                      /* WIRE  */
-  YYSYMBOL_YYACCEPT = 13,                  /* $accept  */
-  YYSYMBOL_netlist = 14,                   /* netlist  */
-  YYSYMBOL_modules = 15,                   /* modules  */
-  YYSYMBOL_module = 16,                    /* module  */
-  YYSYMBOL_input_output_ports = 17,        /* input_output_ports  */
-  YYSYMBOL_input_ports_ = 18,              /* input_ports_  */
-  YYSYMBOL_output_ports_ = 19,             /* output_ports_  */
-  YYSYMBOL_ports_list = 20,                /* ports_list  */
-  YYSYMBOL_port = 21,                      /* port  */
-  YYSYMBOL_wires_declarations = 22,        /* wires_declarations  */
-  YYSYMBOL_wire_declaration = 23,          /* wire_declaration  */
-  YYSYMBOL_wire = 24                       /* wire  */
+  YYSYMBOL_COLON = 13,                     /* COLON  */
+  YYSYMBOL_DOT = 14,                       /* DOT  */
+  YYSYMBOL_YYACCEPT = 15,                  /* $accept  */
+  YYSYMBOL_netlist = 16,                   /* netlist  */
+  YYSYMBOL_modules = 17,                   /* modules  */
+  YYSYMBOL_module = 18,                    /* module  */
+  YYSYMBOL_input_output_ports = 19,        /* input_output_ports  */
+  YYSYMBOL_input_ports_ = 20,              /* input_ports_  */
+  YYSYMBOL_output_ports_ = 21,             /* output_ports_  */
+  YYSYMBOL_ports_list = 22,                /* ports_list  */
+  YYSYMBOL_port = 23,                      /* port  */
+  YYSYMBOL_wires_declarations = 24,        /* wires_declarations  */
+  YYSYMBOL_wire_declaration = 25,          /* wire_declaration  */
+  YYSYMBOL_wire = 26,                      /* wire  */
+  YYSYMBOL_instance_declarations = 27,     /* instance_declarations  */
+  YYSYMBOL_instance_declaration = 28,      /* instance_declaration  */
+  YYSYMBOL_pins_declaration = 29,          /* pins_declaration  */
+  YYSYMBOL_pin_declaration = 30            /* pin_declaration  */
 };
 typedef enum yysymbol_kind_t yysymbol_kind_t;
 
@@ -468,19 +466,19 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  6
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   32
+#define YYLAST   50
 
 /* YYNTOKENS -- Number of terminals.  */
-#define YYNTOKENS  13
+#define YYNTOKENS  15
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  12
+#define YYNNTS  16
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  18
+#define YYNRULES  25
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  38
+#define YYNSTATES  57
 
 /* YYMAXUTOK -- Last valid token kind.  */
-#define YYMAXUTOK   267
+#define YYMAXUTOK   269
 
 
 /* YYTRANSLATE(TOKEN-NUM) -- Symbol number corresponding to TOKEN-NUM
@@ -520,15 +518,16 @@ static const yytype_int8 yytranslate[] =
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
-       5,     6,     7,     8,     9,    10,    11,    12
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14
 };
 
 #if YYDEBUG
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_int8 yyrline[] =
 {
-       0,    33,    33,    37,    38,    43,    60,    77,    78,    79,
-      83,    87,    90,    91,    95,   101,   106,   107,   111
+       0,    25,    25,    29,    30,    35,    40,    46,    47,    48,
+      54,    61,    65,    66,    70,    76,    81,    82,    86,    91,
+      92,    96,   103,   104,   108,   112
 };
 #endif
 
@@ -546,9 +545,11 @@ static const char *const yytname[] =
 {
   "\"end of file\"", "error", "\"invalid token\"", "MODULE", "IDENTIFIER",
   "INPUT", "OUTPUT", "SEMICOLAN", "LPAREN", "RPAREN", "COMMA", "ENDMODULE",
-  "WIRE", "$accept", "netlist", "modules", "module", "input_output_ports",
-  "input_ports_", "output_ports_", "ports_list", "port",
-  "wires_declarations", "wire_declaration", "wire", YY_NULLPTR
+  "WIRE", "COLON", "DOT", "$accept", "netlist", "modules", "module",
+  "input_output_ports", "input_ports_", "output_ports_", "ports_list",
+  "port", "wires_declarations", "wire_declaration", "wire",
+  "instance_declarations", "instance_declaration", "pins_declaration",
+  "pin_declaration", YY_NULLPTR
 };
 
 static const char *
@@ -558,7 +559,7 @@ yysymbol_name (yysymbol_kind_t yysymbol)
 }
 #endif
 
-#define YYPACT_NINF (-8)
+#define YYPACT_NINF (-31)
 
 #define yypact_value_is_default(Yyn) \
   ((Yyn) == YYPACT_NINF)
@@ -572,10 +573,12 @@ yysymbol_name (yysymbol_kind_t yysymbol)
    STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-      13,    14,     2,    13,    -8,    -5,    -8,    -8,    15,    15,
-      15,     8,    11,    -8,    -8,    -3,    -8,    -2,     1,    17,
-      12,    -8,    -8,    15,    -8,    18,    -8,    -1,    -8,    -8,
-      -8,     7,    -8,    17,     8,    -8,    16,    -8
+       4,     0,    13,     4,   -31,     6,   -31,   -31,    15,    15,
+      15,    20,    21,   -31,   -31,    -4,   -31,     8,    12,    26,
+      27,   -31,   -31,    15,   -31,    28,   -31,    10,   -31,    29,
+      -3,   -31,   -31,    18,   -31,    26,    30,   -31,   -31,    20,
+     -31,    22,    27,    33,    16,   -31,    -2,    31,    34,    22,
+     -31,     1,   -31,   -31,    25,   -31,   -31
 };
 
 /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -585,22 +588,24 @@ static const yytype_int8 yydefact[] =
 {
        0,     0,     0,     2,     3,     0,     1,     4,     0,     0,
        0,     0,     8,     9,    14,     0,    12,     0,     0,     0,
-       0,     7,    10,     0,    11,     0,    18,     0,    16,     6,
-      13,     0,    15,     0,     0,    17,     0,     5
+       0,     7,    10,     0,    11,     0,    18,     0,    16,     0,
+       0,    19,    13,     0,    15,     0,     0,     6,    20,     0,
+      17,     0,     0,     0,     0,    22,     0,     0,     0,     0,
+       5,     0,    21,    23,     0,    25,    24
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-      -8,    -8,    -8,    19,    -7,    -8,    20,     5,     3,    -6,
-      -8,    -4
+     -31,   -31,   -31,    37,     9,   -31,    32,    19,    23,    11,
+     -31,    14,     3,   -30,   -31,    -6
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
        0,     2,     3,     4,    11,    12,    13,    15,    16,    20,
-      27,    28
+      27,    28,    30,    31,    44,    45
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -608,42 +613,50 @@ static const yytype_int8 yydefgoto[] =
    number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_int8 yytable[] =
 {
-       8,     9,     6,    10,    22,    24,    32,    23,    23,    33,
-      25,    23,     8,     9,    17,    18,     1,     9,     5,    14,
-      19,    26,     7,    29,    34,    31,    30,    37,    36,    35,
-       0,     0,    21
+      38,    29,    29,    22,     5,    54,    23,     1,    37,    50,
+      55,     8,     9,     6,    10,    24,    38,    34,    23,    14,
+      35,    25,    23,     8,     9,    48,    49,     9,    17,    18,
+      26,    29,    19,    36,    56,    33,    43,    47,    41,    51,
+       7,    52,    39,    53,    21,    46,    32,     0,     0,    40,
+      42
 };
 
 static const yytype_int8 yycheck[] =
 {
-       5,     6,     0,     8,     7,     7,     7,    10,    10,    10,
-       9,    10,     5,     6,     9,    10,     3,     6,     4,     4,
-      12,     4,     3,    11,    31,     7,    23,    11,    34,    33,
-      -1,    -1,    12
+      30,     4,     4,     7,     4,     4,    10,     3,    11,    11,
+       9,     5,     6,     0,     8,     7,    46,     7,    10,     4,
+      10,     9,    10,     5,     6,     9,    10,     6,     9,    10,
+       4,     4,    12,     4,     9,     7,    14,     4,     8,     8,
+       3,     7,    33,    49,    12,    42,    23,    -1,    -1,    35,
+      39
 };
 
 /* YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
    state STATE-NUM.  */
 static const yytype_int8 yystos[] =
 {
-       0,     3,    14,    15,    16,     4,     0,    16,     5,     6,
-       8,    17,    18,    19,     4,    20,    21,    20,    20,    12,
-      22,    19,     7,    10,     7,     9,     4,    23,    24,    11,
-      21,     7,     7,    10,    17,    24,    22,    11
+       0,     3,    16,    17,    18,     4,     0,    18,     5,     6,
+       8,    19,    20,    21,     4,    22,    23,    22,    22,    12,
+      24,    21,     7,    10,     7,     9,     4,    25,    26,     4,
+      27,    28,    23,     7,     7,    10,     4,    11,    28,    19,
+      26,     8,    24,    14,    29,    30,    27,     4,     9,    10,
+      11,     8,     7,    30,     4,     9,     9
 };
 
 /* YYR1[RULE-NUM] -- Symbol kind of the left-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr1[] =
 {
-       0,    13,    14,    15,    15,    16,    16,    17,    17,    17,
-      18,    19,    20,    20,    21,    22,    23,    23,    24
+       0,    15,    16,    17,    17,    18,    18,    19,    19,    19,
+      20,    21,    22,    22,    23,    24,    25,    25,    26,    27,
+      27,    28,    29,    29,    30,    30
 };
 
 /* YYR2[RULE-NUM] -- Number of symbols on the right-hand side of rule RULE-NUM.  */
 static const yytype_int8 yyr2[] =
 {
-       0,     2,     1,     1,     2,     9,     5,     2,     1,     1,
-       3,     3,     1,     3,     1,     3,     1,     3,     1
+       0,     2,     1,     1,     2,    10,     6,     2,     1,     1,
+       3,     3,     1,     3,     1,     3,     1,     3,     1,     1,
+       2,     6,     1,     3,     5,     4
 };
 
 
@@ -1106,63 +1119,56 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-  case 5: /* module: MODULE IDENTIFIER LPAREN ports_list RPAREN SEMICOLAN input_output_ports wires_declarations ENDMODULE  */
-#line 44 "rules.yy"
+  case 5: /* module: MODULE IDENTIFIER LPAREN ports_list RPAREN SEMICOLAN input_output_ports wires_declarations instance_declarations ENDMODULE  */
+#line 36 "rules.yy"
         {
-            current_module = new Modules(*(yyvsp[-7].str));
-            /* if(current_module!=nullptr){std::cout<< "module  created properly ********************"<< current_module->getModuleName() << std ::endl;} */
-            modules_list.push_back(current_module);
-            for (const auto& port : ports_) {
-                current_module->addports(port);
-            }
-            ports_.clear();
-
-            for (const auto& wire : wires_) {
-                current_module->addWire(wire);
-            }
-            wires_.clear();
-            
+            std::cout << *(yyvsp[-8].str) << std::endl;  
         }
-#line 1127 "rules.tab.cc"
+#line 1128 "rules.tab.cc"
     break;
 
-  case 6: /* module: MODULE IDENTIFIER input_output_ports wires_declarations ENDMODULE  */
-#line 61 "rules.yy"
-    {
-        current_module = new Modules(*(yyvsp[-3].str));
-        modules_list.push_back(current_module);
-    
-        for (const auto& port : ports_) {
-            current_module->addports(port);
+  case 6: /* module: MODULE IDENTIFIER input_output_ports wires_declarations instance_declarations ENDMODULE  */
+#line 41 "rules.yy"
+        {
+            std::cout << *(yyvsp[-4].str) << std::endl;
         }
-        ports_.clear();
-        
-        for (const auto& wire : wires_) {
-            current_module->addWire(wire);
-        }
-        wires_.clear();
-    }
-#line 1146 "rules.tab.cc"
+#line 1136 "rules.tab.cc"
     break;
 
   case 14: /* port: IDENTIFIER  */
-#line 95 "rules.yy"
+#line 70 "rules.yy"
               {
-        ports_.insert(*(yyvsp[0].str));     
+            
     }
-#line 1154 "rules.tab.cc"
+#line 1144 "rules.tab.cc"
     break;
 
-  case 18: /* wire: IDENTIFIER  */
-#line 112 "rules.yy"
+  case 21: /* instance_declaration: IDENTIFIER IDENTIFIER LPAREN pins_declaration RPAREN SEMICOLAN  */
+#line 97 "rules.yy"
     {
-        wires_.push_back(*(yyvsp[0].str));
+        std:: cout << *(yyvsp[-5].str) << "------>" << *(yyvsp[-4].str) << " ----->" << std::endl;
     }
-#line 1162 "rules.tab.cc"
+#line 1152 "rules.tab.cc"
+    break;
+
+  case 24: /* pin_declaration: DOT IDENTIFIER LPAREN IDENTIFIER RPAREN  */
+#line 109 "rules.yy"
+    {
+         std::cout << "Pin: " << *(yyvsp[-3].str) << " & Net: " << *(yyvsp[-1].str) << std::endl;
+    }
+#line 1160 "rules.tab.cc"
+    break;
+
+  case 25: /* pin_declaration: DOT IDENTIFIER LPAREN RPAREN  */
+#line 113 "rules.yy"
+    {
+         std::cout << "Pin: " << *(yyvsp[-2].str) << " & Net: " << *(yyvsp[0].str) << std::endl;
+    }
+#line 1168 "rules.tab.cc"
     break;
 
 
-#line 1166 "rules.tab.cc"
+#line 1172 "rules.tab.cc"
 
       default: break;
     }
@@ -1355,31 +1361,14 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 115 "rules.yy"
+#line 116 "rules.yy"
 
 
 int main() {
     yyparse();  // Start parsing
 
-    nlohmann::json all_modules_json;
-    for (const auto& mod : modules_list)
-    {
-        all_modules_json.push_back(mod->toJson());
-    }
-
-    // Print the JSON representation of all modules
-    std::cout << all_modules_json.dump(4) << std::endl;
-
-    
-    // Clean up allocated modules
-    for (auto& mod : modules_list)
-    {
-        delete mod;
-    }
-
-    return 0;
 }
 
 void yyerror(const char *s) {
-    std::cerr << "Error: " << s << "  "<< yylineno << yytext <<std::endl;
+    std::cerr << "Error: " << s << " at line - "<< yylineno << " near " <<yylex <<  (yytext  ? yytext : "EOF")<<std::endl;
 }

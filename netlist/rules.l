@@ -20,6 +20,8 @@ module  {  return MODULE;}
 ";"     { return SEMICOLAN;}
 "("     { return LPAREN;}
 ")"     { return RPAREN;}
+":"     {return COLON;}
+"."     { return DOT;}
 [a-zA-Z0-9_]+ { yylval.str = new std::string(yytext);return IDENTIFIER;}
 
 [\t\n\r] {}

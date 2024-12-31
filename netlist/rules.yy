@@ -1,21 +1,13 @@
 %{
     #include <iostream>
     #include <string>
-    #include <vector>
     #include <set>
+    #include <vector>
+ 
     extern char* yytext;  // Declare yytext (defined by Flex)
     extern int yylex(); 
     extern void yyerror(const char *s);
     extern int yylineno;
-
-    #include "./objects/util.hh"
-
-    std::vector<Modules*> modules_list;\
-    std::set<std::string> ports_;
-    std::vector<std::string> input_ports_;
-    std::vector<std::string> output_ports_;
-    std::vector<std::string> wires_;
-    Modules* current_module = nullptr; 
 
 %}
 %union{
@@ -23,7 +15,7 @@
   std::string *str;
 }
 
-%token <str> MODULE IDENTIFIER INPUT OUTPUT SEMICOLAN LPAREN RPAREN COMMA ENDMODULE WIRE
+%token <str> MODULE IDENTIFIER INPUT OUTPUT SEMICOLAN LPAREN RPAREN COMMA ENDMODULE WIRE COLON DOT
 
 
 %start netlist
@@ -40,38 +32,15 @@ modules:
 
 
 module:
-    MODULE IDENTIFIER LPAREN ports_list RPAREN SEMICOLAN input_output_ports wires_declarations ENDMODULE
+    MODULE IDENTIFIER LPAREN ports_list RPAREN SEMICOLAN input_output_ports wires_declarations instance_declarations ENDMODULE
         {
-            current_module = new Modules(*$2);
-            /* if(current_module!=nullptr){std::cout<< "module  created properly ********************"<< current_module->getModuleName() << std ::endl;} */
-            modules_list.push_back(current_module);
-            for (const auto& port : ports_) {
-                current_module->addports(port);
-            }
-            ports_.clear();
-
-            for (const auto& wire : wires_) {
-                current_module->addWire(wire);
-            }
-            wires_.clear();
-            
+            std::cout << *$2 << std::endl;  
         }
     |
-    MODULE IDENTIFIER input_output_ports wires_declarations ENDMODULE
-    {
-        current_module = new Modules(*$2);
-        modules_list.push_back(current_module);
-    
-        for (const auto& port : ports_) {
-            current_module->addports(port);
+    MODULE IDENTIFIER input_output_ports wires_declarations instance_declarations ENDMODULE
+        {
+            std::cout << *$2 << std::endl;
         }
-        ports_.clear();
-        
-        for (const auto& wire : wires_) {
-            current_module->addWire(wire);
-        }
-        wires_.clear();
-    }
 
 input_output_ports:
     input_ports_ output_ports_
@@ -80,11 +49,17 @@ input_output_ports:
     ;
 
 input_ports_:
+    // INPUT width ports_list SEMICOLAN
+    // |
     INPUT ports_list SEMICOLAN
+    
     ;
 
 output_ports_:
+    // OUTPUT width ports_list SEMICOLAN
+    // |
     OUTPUT ports_list SEMICOLAN
+    //add output_ports function;
     ;
 ports_list:
     port
@@ -93,7 +68,7 @@ ports_list:
 
 port:
     IDENTIFIER{
-        ports_.insert(*$1);     
+            
     }
     ;
 
@@ -109,33 +84,42 @@ wire_declaration:
     
 wire:
     IDENTIFIER
+   ;
+
+instance_declarations:
+    /* empty */
+    instance_declaration
+    |instance_declarations instance_declaration
+    ;
+
+instance_declaration:
+    IDENTIFIER IDENTIFIER LPAREN pins_declaration RPAREN SEMICOLAN
     {
-        wires_.push_back(*$1);
+        std:: cout << *$1 << "------>" << *$2 << " ----->" << std::endl;
+    }
+    ;
+
+pins_declaration:
+    pin_declaration
+    | pins_declaration COMMA pin_declaration
+    ;
+
+pin_declaration:
+    DOT IDENTIFIER LPAREN IDENTIFIER RPAREN
+    {
+         std::cout << "Pin: " << *$2 << " & Net: " << *$4 << std::endl;
+    }
+    |DOT IDENTIFIER LPAREN  RPAREN
+    {
+         std::cout << "Pin: " << *$2 << " & Net: " << *$4 << std::endl;
     }
 %%
 
 int main() {
     yyparse();  // Start parsing
 
-    nlohmann::json all_modules_json;
-    for (const auto& mod : modules_list)
-    {
-        all_modules_json.push_back(mod->toJson());
-    }
-
-    // Print the JSON representation of all modules
-    std::cout << all_modules_json.dump(4) << std::endl;
-
-    
-    // Clean up allocated modules
-    for (auto& mod : modules_list)
-    {
-        delete mod;
-    }
-
-    return 0;
 }
 
 void yyerror(const char *s) {
-    std::cerr << "Error: " << s << "  "<< yylineno << yytext <<std::endl;
+    std::cerr << "Error: " << s << " at line - "<< yylineno << " near " <<yylex <<  (yytext  ? yytext : "EOF")<<std::endl;
 }
