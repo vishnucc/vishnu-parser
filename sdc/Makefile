@@ -3,4 +3,5 @@ all:
 	g++ -o sdc lex.yy.c -lfl
 	./sdc
 
-clean:
+clean: 
+	rm  sdc 

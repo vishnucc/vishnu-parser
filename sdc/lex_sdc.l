@@ -10,9 +10,9 @@
 
 
 %%
-set {retrn SET;}
-","     { return COMMA;} 
-";"     { return SEMICOLAN;}
+set {}
+","     { } 
+";"     { }
 [0-9]+ { std:: cout << "period ->" << yytext << std:: endl;}
 \#.* {std:: cout << "comment" << std::endl;}
 \/\/.* {}
